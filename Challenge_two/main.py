@@ -1,5 +1,18 @@
 """
 Code refactoring for improve security, standard and good practices in case of company expansion.
+
+- Protect the Employee class from being instantiated directly.
+- Make the implementation of the methods of the Employee class mandatory, implement them if necessary.
+- Protect the department attribute of the Manager class so that it is accessed only through the get_department method.
+- Correct the methods so that the inheritance works correctly.
+- Protect the sales attribute of the Seller class so that it is not directly accessed, create a method called
+get_sales to return the value of the attribute and put_sales to add values to that attribute, remembering that
+sales are cumulative
+- Implement the get_department method that returns the department name and set_department that changes the
+department name for the Manager and Seller classes
+- Standardize an 8-hour workload for all employees.
+The calculation of the Seller's calc_bonus method must be calculated by the total sales times 0.15
+
 """
 # This library is to make the Employee class abstract.
 from abc import ABC, abstractmethod
@@ -12,11 +25,12 @@ class Department:
 
 
 class Employee(ABC):
-    def __init__(self, code, name, salary):
+    def __init__(self, code, name, salary, department):
         self.code = code
         self.name = name
         self.salary = salary
         self.hours = 8
+        self.__departament = Department('managers', 1)
 
     @abstractmethod
     def calc_bonus(self):
@@ -26,18 +40,6 @@ class Employee(ABC):
     def get_hours(self):
         return self.hours
 
-
-class Manager(Employee):
-    def __init__(self, code, name, salary):
-        super().__init__(code, name, salary)
-        self.__departament = Department('managers', 1)
-
-    def calc_bonus(self):
-        return self.salary * 0.15
-
-    def get_hours(self):
-        return 8
-
     def get_departament(self):
         return self.__departament.name
 
@@ -45,14 +47,26 @@ class Manager(Employee):
         self.__departament.name = department
 
 
+class Manager(Employee):
+    def __init__(self, code, name, salary):
+        super().__init__(code, name, salary)
+        self.set_departament(Department('managers', 1))
+
+    def calc_bonus(self):
+        return self.salary * 0.15
+
+    def get_hours(self):
+        return self.hours
+
+
 class Seller(Employee):
     def __init__(self, code, name, salary):
         super().__init__(code, name, salary)
-        self.__departament = Department('sellers', 2)
+        self.set_departament(Department('sellers', 2))
         self.__sales = 0
 
     def get_hours(self):
-        return 8
+        return self.hours
 
     def calc_bonus(self):
         return self.__sales * 0.15
@@ -62,12 +76,6 @@ class Seller(Employee):
 
     def put_sales(self, new_sale):
         self.__sales += new_sale
-
-    def get_departament(self):
-        return self.__departament.name
-
-    def set_departament(self, department):
-        self.__departament.name = department
 
 
 # Instantiating
