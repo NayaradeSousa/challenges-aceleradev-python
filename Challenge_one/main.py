@@ -45,17 +45,37 @@ FINAL_TIME_DAY_RATE = 22
 
 
 def convert_time(start, end):
+    """
+    Method that convert timestamp to conventional time. In this case the timestamp is in specific
+    timezone: Brazil/East.
+    :param start: timestamp that indicates the start of the call (for example: 1564626000)
+    :param end: timestamp that indicates the end of the call (for example: 1564627800)
+    :return: conventional time of beginning and ending of the call, respectively
+    """
     beginning = datetime.fromtimestamp(start, tz=pytz.timezone('Brazil/East'))
     finish = datetime.fromtimestamp(end, tz=pytz.timezone('Brazil/East'))
     return beginning, finish
 
 
 def calculation_minutes(beginning, finish):
+    """
+    Method that calculates the call duration in minutes.
+    :param beginning: conventional time to start of the call
+    :param finish: conventional time to ending of the call
+    :return: duration in minutes
+    """
     duration_seconds = (finish - beginning).total_seconds()
     return int(duration_seconds / 60)
 
 
 def calculate_call_price(start, end):
+    """
+    Method that, from the duration of minutes of the call and specific fees, calculates
+    the rate of each call.
+    :param start: timestamp that indicates the start of the call (for example: 1564626000)
+    :param end: timestamp that indicates the end of the call (for example: 1564627800)
+    :return: rate of each call
+    """
     beginning, finish = convert_time(start, end)
     duration_minutes = calculation_minutes(beginning, finish)
 
@@ -78,6 +98,11 @@ def calculate_call_price(start, end):
 
 
 def classify_by_phone_number(records):
+    """
+    Method that summarize the sources and calculate amount charged for all calls made.
+    :param records: list containing - origin, destiny, start date and time, end date and time of call
+    :return: summarized list containing - origin and amount charged for all calls made by that source.
+    """
     bills = []
 
     for record in records:
