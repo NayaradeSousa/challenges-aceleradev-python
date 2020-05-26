@@ -24,8 +24,16 @@ class Department:
         self.code = code
 
 
-# Abstract class - this prevent directly access
 class Employee(ABC):
+    """
+    Abstract class - this prevent directly access. This class receive as
+    parameters: your employee code, your name, your salary and the department
+    that will work.
+    The attribute 'department' is private for avoid directly access. That it is accessed
+    only through the get_department method.
+    The methods 'calc_bonus' and 'get_hours' are mandatory methods for all classes that
+    inherit from the employees class.
+    """
     def __init__(self, code, name, salary, department):
         self.code = code
         self.name = name
@@ -49,6 +57,10 @@ class Employee(ABC):
 
 
 class Manager(Employee):
+    """
+    This class inherits from the 'Employees' class. However 'calc_bonus' overrides
+    method in Employee. Calculation of the bonus is made from the employee's salary.
+    """
     def __init__(self, code, name, salary):
         super().__init__(code, name, salary, Department('managers', 1))
 
@@ -60,6 +72,10 @@ class Manager(Employee):
 
 
 class Seller(Employee):
+    """
+       This class inherits from the 'Employees' class. However 'calc_bonus' overrides
+    method in Employee. Calculation of the bonus is made from the sales amount of the seller.
+       """
     def __init__(self, code, name, salary):
         super().__init__(code, name, salary, Department('sellers', 2))
         self.__sales = 0
