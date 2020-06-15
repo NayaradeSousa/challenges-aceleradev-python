@@ -2,18 +2,22 @@ from django.db import models
 from django.core import validators
 
 
+def validation_log_levels(level):
+    if level not in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']:
+        raise validators.ValidationError('Level is wrong!')
+
+
 class User(models.Model):
     name = models.CharField('Name', max_length=50)
     last_login = models.DateTimeField('Last Login', auto_now=True)
     email = models.EmailField(
         'E-mail',
-        max_length=254,
         validators=[validators.validate_email]
     )
     password = models.CharField(
         'Password',
         max_length=50,
-        validators=[validators.MinValueValidator(6)]
+        validators=[validators.MinValueValidator(8)]
     )
 
 
@@ -30,9 +34,13 @@ class Agent(models.Model):
 
 
 class Event(models.Model):
-    level = models.CharField('Level', max_length=20)
+    level = models.CharField(
+        'Level',
+        max_length=20,
+        validators=[validation_log_levels]
+    )
     data = models.TextField('Data')
-    arquivado = models.BooleanField('Arquivado')
+    arquivado = models.BooleanField('Filed')
     date = models.DateField('Date', auto_now=True)
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
