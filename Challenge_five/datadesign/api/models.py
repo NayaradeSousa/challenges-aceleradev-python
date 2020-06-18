@@ -20,6 +20,9 @@ class User(models.Model):
         validators=[validators.MinValueValidator(8)]
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Agent(models.Model):
     name = models.CharField('Name', max_length=50)
@@ -31,6 +34,9 @@ class Agent(models.Model):
         max_length=39,
         validators=[validators.validate_ipv4_address]
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Event(models.Model):
@@ -45,9 +51,15 @@ class Event(models.Model):
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.level
+
 
 class Group(models.Model):
     name = models.CharField('Name', max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 class GroupUser(models.Model):
